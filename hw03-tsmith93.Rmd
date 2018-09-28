@@ -5,17 +5,65 @@ date: '2018-09-27'
 output: github_document
 ---
 
-##Initial exploration
+##Loading packages
 
 If you haven't already done so, download both gapminder and tidyverse using `install.packages()` 
 
-Next load gapminder and tidyverse:
+Next load gapminder, tidyverse and knitr:
 
 ```{r}
 #suppressPackageStartupMessages stops unecessary messages from popping up
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(gapminder))
+suppressPackageStartupMessages(library(knitr))
 ```
+
+##Problem solving uing dplyr and ggplot2 
+
+#Maximum and minimum of GDP per capita for all continents
+
+```{r}
+gapminder %>% 
+  group_by(continent) %>% 
+  mutate_each(funs(round(.,2)), gdpPercap) %>% 
+  summarize(minimum = min(gdpPercap),
+  maximum =max(gdpPercap)) %>% 
+  kable(col.names = c("Continent", " Minimum GDP per Capita", "Maximum GDP per Capita"))  
+```
+
+Let's double check to see if these values are what we are looking for:
+
+```{r}
+gapminder %>% 
+  filter(continent == "Asia") %>% 
+  arrange(gdpPercap)
+```
+
+
+```{r}
+ggplot(gapminder, aes(continent, gdpPercap)) +
+  geom_boxplot(aes(fill=continent)) +
+  xlab("Continent") +
+  ylab("GDP per capita") +
+  guides(fill=guide_legend(title="Continent")) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(),
+  axis.line = element_line(colour = "black"))
+```
+
+##Life Expectancy over year
+
+```{r}
+gapminder %>% 
+ggplot(aes(year, lifeExp)) +
+  xlab("Continent") +
+  ylab("GDP per capita") +
+  geom_point(aes(fill = continent)) +
+   geom_smooth(se = FALSE, aes(colour = continent)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(),
+  axis.line = element_line(colour = "black"))
+  
+```
+
 
 
 
