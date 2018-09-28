@@ -87,7 +87,7 @@ gapminder %>%
 ggplot(aes(year, lifeExp)) +
   xlab("Continent") +
   ylab("GDP per capita") +
-  geom_point(aes(fill = continent)) +
+  geom_point(aes(colour = continent)) +
    geom_smooth(se = FALSE, aes(colour = continent)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(),
   axis.line = element_line(colour = "black"))
@@ -96,3 +96,35 @@ ggplot(aes(year, lifeExp)) +
     ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 
 ![](hw03-tsmith93_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+``` r
+longdata <- gapminder %>% 
+  filter(year == "1952" | year == "2007") %>% 
+  select(continent, year, lifeExp) %>% 
+  group_by(continent, year) %>% 
+  summarize(Life = mean(lifeExp))
+
+
+
+widedata <- spread(longdata, year, Life)
+
+colnames(widedata) <- c("continent", "first","last")
+  
+
+widedata %>% 
+  mutate(difference = last - first) %>% 
+  mutate_each(funs(round(.,2))) %>% 
+  kable(col.names = c("Continent", "Life expectancy in 1952", "Life expectancy in 2007", "Change in life expectancy"))
+```
+
+    ## `mutate_each()` is deprecated.
+    ## Use `mutate_all()`, `mutate_at()` or `mutate_if()` instead.
+    ## To map `funs` over all variables, use `mutate_all()`
+
+| Continent |  Life expectancy in 1952|  Life expectancy in 2007|  Change in life expectancy|
+|:----------|------------------------:|------------------------:|--------------------------:|
+| Africa    |                    39.14|                    54.81|                      15.67|
+| Americas  |                    53.28|                    73.61|                      20.33|
+| Asia      |                    46.31|                    70.73|                      24.41|
+| Europe    |                    64.41|                    77.65|                      13.24|
+| Oceania   |                    69.25|                    80.72|                      11.46|

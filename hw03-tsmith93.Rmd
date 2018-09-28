@@ -57,14 +57,31 @@ gapminder %>%
 ggplot(aes(year, lifeExp)) +
   xlab("Continent") +
   ylab("GDP per capita") +
-  geom_point(aes(fill = continent)) +
+  geom_point(aes(colour = continent)) +
    geom_smooth(se = FALSE, aes(colour = continent)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(),
   axis.line = element_line(colour = "black"))
   
 ```
 
+```{r}
+longdata <- gapminder %>% 
+  filter(year == "1952" | year == "2007") %>% 
+  select(continent, year, lifeExp) %>% 
+  group_by(continent, year) %>% 
+  summarize(Life = mean(lifeExp))
 
 
 
+widedata <- spread(longdata, year, Life)
+
+colnames(widedata) <- c("continent", "first","last")
+  
+
+widedata %>% 
+  mutate(difference = last - first) %>% 
+  mutate_each(funs(round(.,2))) %>% 
+  kable(col.names = c("Continent", "Life expectancy in 1952", "Life expectancy in 2007", "Change in life expectancy"))
+
+```
 
