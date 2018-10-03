@@ -195,6 +195,7 @@ Interesting history
 Finally, we will use `diplyr` and `ggplot2` to explore the histor of a country. For this, we will look at Cambodia, as between 1975 and 1979, a terrible genocide occured in the country. Specifically, we will look at the population over time.
 
 First we will make a scatterplot. 
+
 | Grammar Component | Specification | 
 |-----------------------|---------------| 
 | **data** | `gapminder` | 
